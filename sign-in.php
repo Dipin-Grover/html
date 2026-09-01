@@ -1,5 +1,35 @@
 <?php
-session_start();
+require_once 'inc/auth.php'; // Starts session and connects to DB
+
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $captcha = $_POST['captcha'] ?? '';
+
+    // Check captcha from previous request
+    if (isset($_SESSION['signin_captcha']) && $captcha != $_SESSION['signin_captcha']) {
+        $error = "Incorrect captcha!";
+    } else {
+        try {
+            $stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($password, $user['password_hash'])) {
+                $_SESSION['user_id'] = $user['id'];
+                header("Location: checkout.php"); // Or index.php
+                exit;
+            } else {
+                $error = "Invalid email or password.";
+            }
+        } catch (PDOException $e) {
+            $error = "Login failed. Please try again.";
+        }
+    }
+}
+
+// Generate new captcha for current render
 $captcha_num1 = rand(10, 50);
 $captcha_num2 = rand(1, 20);
 $_SESSION['signin_captcha'] = $captcha_num1 + $captcha_num2;
@@ -378,28 +408,31 @@ $_SESSION['signin_captcha'] = $captcha_num1 + $captcha_num2;
             
             <div class="auth-header">
                <h2>LOGIN TO YOUR ACCOUNT</h2>
+               <?php if($error): ?>
+                   <div class="alert alert-danger p-2 mt-2 border-0 rounded" style="font-size:14px; background: rgba(220, 53, 69, 0.1); color: #dc3545;"><?php echo htmlspecialchars($error); ?></div>
+               <?php endif; ?>
             </div>
             
-            <form action="orders.php">
+            <form action="sign-in.php" method="POST">
                
                <div class="auth-input-group">
                   <div class="auth-input-wrapper">
                      <i class="fal fa-envelope icon-left"></i>
-                     <input type="email" class="auth-input" placeholder="Email address *" required>
+                     <input type="email" name="email" class="auth-input" placeholder="Email address *" required>
                   </div>
                </div>
                
                <div class="auth-input-group">
                   <div class="auth-input-wrapper">
                      <i class="fal fa-lock icon-left"></i>
-                     <input type="password" class="auth-input" placeholder="Password *" required>
+                     <input type="password" name="password" class="auth-input" placeholder="Password *" required>
                      <i class="fal fa-eye position-absolute" style="right: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; cursor: pointer; font-size: 15px;"></i>
                   </div>
                </div>
                
                <div class="captcha-row">
                   <div class="captcha-box"><?php echo $captcha_num1; ?> + <?php echo $captcha_num2; ?> =</div>
-                  <input type="text" class="auth-input captcha-input" placeholder="Enter captcha*" required>
+                  <input type="text" name="captcha" class="auth-input captcha-input" placeholder="Enter captcha*" required>
                </div>
                
                <div class="auth-options">
