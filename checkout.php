@@ -1,3 +1,39 @@
+<?php
+require_once 'inc/auth.php';
+redirectIfNotLoggedIn('sign-in.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $cartData = json_decode($_POST['cart_data'] ?? '{}', true);
+    if (!empty($cartData['items'])) {
+        $userId = getLoggedInUserId();
+        $total = $cartData['total'] ?? 0;
+        
+        // Save billing address
+        $stmt = $pdo->prepare("INSERT INTO addresses (user_id, type, address_line1, city, state, zip, country) VALUES (?, 'billing', ?, ?, ?, ?, 'India')");
+        $stmt->execute([
+            $userId, 
+            $_POST['billing_address'] ?? '', 
+            $_POST['billing_city'] ?? '', 
+            $_POST['billing_state'] ?? '', 
+            $_POST['billing_pincode'] ?? ''
+        ]);
+        
+        // Insert order
+        $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'Processing')");
+        $stmt->execute([$userId, $total]);
+        $orderId = $pdo->lastInsertId();
+        
+        // Insert items
+        $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_name, quantity, price, image) VALUES (?, ?, ?, ?, ?)");
+        foreach ($cartData['items'] as $item) {
+            $stmt->execute([$orderId, $item['name'], $item['qty'], $item['price'] ?? 0, $item['image'] ?? '']);
+        }
+        
+        header("Location: order-success.php");
+        exit;
+    }
+}
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
   <head>
@@ -34,9 +70,10 @@
           <form
             class="row g-4 checkout-layout"
             id="checkout-form"
-            action="order-success.php"
+            action="checkout.php"
             method="POST"
           >
+            <input type="hidden" name="cart_data" id="cart_data_input">
             <!-- Left Column: Forms -->
             <div class="col-lg-8 checkout-main-col">
               <div
@@ -146,6 +183,7 @@
                     >
                     <input
                       type="text"
+                      name="billing_address"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="e.g. 123 Main St, Apt 4B"
                       required
@@ -163,6 +201,7 @@
                     <input
                       type="text"
                       id="billing_pincode"
+                      name="billing_pincode"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="PIN Code"
                       required
@@ -185,6 +224,7 @@
                     <input
                       type="text"
                       id="billing_city"
+                      name="billing_city"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="Town / City"
                       required
@@ -201,6 +241,7 @@
                     >
                     <select
                       id="billing_state"
+                      name="billing_state"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       required
                     >
@@ -945,33 +986,8 @@
           checkoutForm.addEventListener("submit", function (e) {
             const cartDataStr = localStorage.getItem("deltaCartData");
             if (cartDataStr) {
-              try {
-                const cartData = JSON.parse(cartDataStr);
-                let orderHistory = JSON.parse(
-                  localStorage.getItem("deltaOrderHistory") || "[]",
-                );
-
-                const newOrder = {
-                  orderId: "#ORD-" + Math.floor(1000 + Math.random() * 9000),
-                  date: new Date().toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  }),
-                  items: cartData.items,
-                  total: cartData.total,
-                  status: "Processing",
-                };
-                orderHistory.unshift(newOrder);
-                localStorage.setItem(
-                  "deltaOrderHistory",
-                  JSON.stringify(orderHistory),
-                );
-
-                localStorage.removeItem("deltaCartData");
-              } catch (err) {
-                console.error("Error saving order history", err);
-              }
+               document.getElementById("cart_data_input").value = cartDataStr;
+               localStorage.removeItem("deltaCartData");
             }
           });
         }

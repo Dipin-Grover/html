@@ -1,3 +1,13 @@
+<?php
+require_once 'inc/auth.php';
+redirectIfNotLoggedIn('sign-in.php');
+$user = getLoggedInUser();
+
+// Fetch orders
+$stmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC");
+$stmt->execute([$user['id']]);
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
   <head>
@@ -20,7 +30,7 @@
             <div class="row mb-4">
               <div class="col-12">
                 <h2 class="fw-bold text-dark fs-3 mb-1">Your Account</h2>
-                <p class="text-secondary mb-0" style="font-size: 14px;">Alex John, Email: alexjohn@gmail.com</p>
+                <p class="text-secondary mb-0" style="font-size: 14px;"><?php echo htmlspecialchars($user['name']); ?>, Email: <?php echo htmlspecialchars($user['email']); ?></p>
               </div>
             </div>
             <div class="row">
@@ -65,7 +75,81 @@
                 </div>
                 
                 <div id="orders-container">
-                  <!-- Orders will be dynamically injected here -->
+                  <?php if (empty($orders)): ?>
+                    <div class="text-center py-5 text-secondary bg-white rounded border">No orders found. Start shopping!</div>
+                  <?php else: ?>
+                    <?php foreach ($orders as $order): ?>
+                      <?php
+                      // Fetch items for this order
+                      $stmtItems = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
+                      $stmtItems->execute([$order['id']]);
+                      $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+                      $totalProducts = array_sum(array_column($items, 'quantity'));
+                      $orderDate = date("M j, Y, g:i a", strtotime($order['created_at']));
+                      $statusColor = (strtolower($order['status']) === 'processing' || strtolower($order['status']) === 'on the way') ? 'text-warning' : 'text-success';
+                      $formattedTotal = '₹' . number_format($order['total_amount'], 2);
+                      ?>
+                      
+                      <div class="card mb-4 border rounded shadow-sm">
+                        <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                          <div>
+                            <h5 class="fw-bold mb-1 fs-6">Order #: <?php echo $order['id']; ?></h5>
+                            <p class="text-secondary mb-0" style="font-size: 13px;"><?php echo $totalProducts; ?> Products | By <?php echo htmlspecialchars($user['name']); ?> | <?php echo $orderDate; ?></p>
+                          </div>
+                          <div>
+                            <button class="btn btn-outline-secondary btn-sm px-3 fw-medium text-dark me-2" style="border-radius: 6px; font-size: 13px;"><i class="fas fa-download me-2"></i>Download invoice</button>
+                            <button class="btn btn-outline-secondary btn-sm text-dark px-2" style="border-radius: 6px;"><i class="fas fa-ellipsis-v"></i></button>
+                          </div>
+                        </div>
+                        <div class="card-body p-4">
+                          <div class="row mb-4">
+                            <div class="col-md-8">
+                              <table class="table table-borderless table-sm mb-0" style="font-size: 14px;">
+                                <tbody>
+                                  <tr>
+                                    <td class="text-secondary py-1 ps-0" style="width: 140px;">Status:</td>
+                                    <td class="fw-medium <?php echo $statusColor; ?> py-1"><?php echo htmlspecialchars($order['status']); ?></td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-secondary py-1 ps-0">Date of delivery:</td>
+                                    <td class="text-dark py-1">Est. 3-5 business days</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-secondary py-1 ps-0">Total:</td>
+                                    <td class="fw-bold text-dark py-1"><?php echo $formattedTotal; ?></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          
+                          <div class="row row-cols-1 row-cols-md-2 g-4">
+                            <?php foreach ($items as $item): ?>
+                               <?php
+                               $imgHtml = $item['image'] ? '<img src="'.htmlspecialchars($item['image']).'" alt="'.htmlspecialchars($item['product_name']).'" class="img-fluid" style="max-height: 60px;">' : '<i class="fas fa-box text-secondary fs-3"></i>';
+                               $priceText = $item['price'] > 0 ? '₹' . number_format($item['price'], 2) : 'N/A';
+                               $itemTotal = $item['price'] > 0 ? '₹' . number_format($item['price'] * $item['quantity'], 2) : '';
+                               ?>
+                               <div class="col">
+                                  <div class="d-flex align-items-center">
+                                     <div class="bg-light rounded p-2 me-3 d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; border: 1px solid #f1f1f1;">
+                                        <?php echo $imgHtml; ?>
+                                     </div>
+                                     <div>
+                                        <h6 class="mb-1 text-dark fs-6" style="font-size: 14px;"><?php echo htmlspecialchars($item['product_name']); ?></h6>
+                                        <p class="text-secondary mb-0" style="font-size: 13px;">Quantity: <?php echo $item['quantity']; ?>x = <?php echo $itemTotal ?: $priceText; ?></p>
+                                     </div>
+                                  </div>
+                               </div>
+                            <?php endforeach; ?>
+                            <?php if (empty($items)): ?>
+                               <div class="col"><p class="text-secondary">No items detailed.</p></div>
+                            <?php endif; ?>
+                          </div>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
@@ -79,105 +163,7 @@
     <?php include 'inc/footer-links.php'; ?>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById("orders-container");
-        if (container) {
-          let orderHistory = [];
-          try {
-            orderHistory = JSON.parse(
-              localStorage.getItem("deltaOrderHistory") || "[]",
-            );
-          } catch (e) {
-            console.error("Error loading order history", e);
-          }
-
-          if (orderHistory.length === 0) {
-            container.innerHTML = `<div class="text-center py-5 text-secondary bg-white rounded border">No orders found. Start shopping!</div>`;
-          } else {
-            let html = "";
-            orderHistory.forEach((order) => {
-              let itemsHtml = "";
-              let totalProducts = 0;
-              if (order.items && order.items.length > 0) {
-                totalProducts = order.items.reduce((acc, item) => acc + (item.qty || 1), 0);
-                order.items.forEach((item) => {
-                  let imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="img-fluid" style="max-height: 60px;">` : `<i class="fas fa-box text-secondary fs-3"></i>`;
-                  let priceText = item.price ? `₹${Number(item.price).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "N/A";
-                  let itemTotal = item.price && item.qty ? `₹${Number(item.price * item.qty).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "";
-                  itemsHtml += `
-                    <div class="col">
-                       <div class="d-flex align-items-center">
-                          <div class="bg-light rounded p-2 me-3 d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; border: 1px solid #f1f1f1;">
-                             ${imgHtml}
-                          </div>
-                          <div>
-                             <h6 class="mb-1 text-dark fs-6" style="font-size: 14px;">${item.name}</h6>
-                             <p class="text-secondary mb-0" style="font-size: 13px;">Quantity: ${item.qty}x = ${itemTotal || priceText}</p>
-                             <p class="text-secondary mb-0" style="font-size: 13px;">Color: Default</p>
-                             <p class="text-secondary mb-0" style="font-size: 13px;">Size: Standard</p>
-                          </div>
-                       </div>
-                    </div>
-                  `;
-                });
-              } else {
-                itemsHtml = `<div class="col"><p class="text-secondary">No items detailed.</p></div>`;
-              }
-
-              let statusColor = "text-success";
-              if(order.status.toLowerCase() === "processing" || order.status.toLowerCase() === "on the way") {
-                statusColor = "text-warning";
-              }
-
-              let formattedTotal = `₹${Number(order.total).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-              html += `
-              <div class="card mb-4 border rounded shadow-sm">
-                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                  <div>
-                    <h5 class="fw-bold mb-1 fs-6">Order #: ${order.orderId}</h5>
-                    <p class="text-secondary mb-0" style="font-size: 13px;">${totalProducts} Products | By Alex John | ${order.date}</p>
-                  </div>
-                  <div>
-                    <button class="btn btn-outline-secondary btn-sm px-3 fw-medium text-dark me-2" style="border-radius: 6px; font-size: 13px;"><i class="fas fa-download me-2"></i>Download invoice</button>
-                    <button class="btn btn-outline-secondary btn-sm text-dark px-2" style="border-radius: 6px;"><i class="fas fa-ellipsis-v"></i></button>
-                  </div>
-                </div>
-                <div class="card-body p-4">
-                  <div class="row mb-4">
-                    <div class="col-md-8">
-                      <table class="table table-borderless table-sm mb-0" style="font-size: 14px;">
-                        <tbody>
-                          <tr>
-                            <td class="text-secondary py-1 ps-0" style="width: 140px;">Status:</td>
-                            <td class="fw-medium ${statusColor} py-1">${order.status}</td>
-                          </tr>
-                          <tr>
-                            <td class="text-secondary py-1 ps-0">Date of delivery:</td>
-                            <td class="text-dark py-1">Est. 3-5 business days</td>
-                          </tr>
-                          <tr>
-                            <td class="text-secondary py-1 ps-0">Delivered to:</td>
-                            <td class="text-dark py-1">Great street, New York Brooklyn 5A, PO: 212891</td>
-                          </tr>
-                          <tr>
-                            <td class="text-secondary py-1 ps-0">Total:</td>
-                            <td class="fw-bold text-dark py-1">${formattedTotal}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  
-                  <div class="row row-cols-1 row-cols-md-2 g-4">
-                     ${itemsHtml}
-                  </div>
-                </div>
-              </div>
-              `;
-            });
-            container.innerHTML = html;
-          }
-        }
+          // JS rendering removed as it's now handled by PHP
       });
     </script>
   </body>
