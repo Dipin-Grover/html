@@ -21,6 +21,9 @@ try {
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
+            first_name VARCHAR(100),
+            last_name VARCHAR(100),
+            display_name VARCHAR(255),
             email VARCHAR(255) NOT NULL UNIQUE,
             password_hash VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -33,6 +36,12 @@ try {
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
             type ENUM('billing', 'shipping') NOT NULL DEFAULT 'shipping',
+            first_name VARCHAR(100),
+            last_name VARCHAR(100),
+            phone VARCHAR(20),
+            email VARCHAR(255),
+            company VARCHAR(255),
+            gst VARCHAR(50),
             address_line1 VARCHAR(255) NOT NULL,
             address_line2 VARCHAR(255),
             city VARCHAR(100) NOT NULL,
@@ -51,8 +60,10 @@ try {
             user_id INT NOT NULL,
             total_amount DECIMAL(10, 2) NOT NULL,
             status VARCHAR(50) DEFAULT 'Processing',
+            address_id INT DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE SET NULL
         )
     ");
 

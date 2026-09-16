@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "jquery": "^4.0.0",
+    "magnific-popup": "^1.2.0"
+  }
+}

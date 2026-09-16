@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -29,7 +34,7 @@
                </div>
                <div class="col-lg-5">
                   <div class="tp-service-hero-right mt-130">
-                     <p class="fs-20 lh-140-per">Welcome to DeltaView Technologies Pvt. Ltd. A vibrant and innovative organization on a mission to enhance lives through cutting-edge technology. Born from a vision to revolutionize both education and enterprise landscapes, DeltaView is dedicated to providing dynamic and tailored solutions that empower individuals and organizations to thrive in a digital world.</p>
+                     <p class="fs-20 lh-140-per">random text </p>
                   </div>
                </div>
             </div>

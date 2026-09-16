@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
   <head>
@@ -59,7 +64,7 @@
             shortly with your order details.
           </p>
           <a
-            href="orders.php"
+            href="my-account.php"
             class="btn btn-dark px-4 py-3 fw-semibold shadow-sm"
             style="
               border-radius: 8px;

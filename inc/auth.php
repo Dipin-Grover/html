@@ -17,7 +17,7 @@ function getLoggedInUser() {
     global $pdo;
     $userId = getLoggedInUserId();
     if ($userId) {
-        $stmt = $pdo->prepare("SELECT id, name, email, created_at FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT id, name, first_name, last_name, display_name, email, password_hash, created_at FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

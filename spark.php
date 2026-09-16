@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -18,7 +23,7 @@
                      <p class="fs-18 lh-140-per mb-30">
                         DeltaView Spark Interactive Panel makes learning smarter, engaging, and interactive.
                      </p>
-                     <a class="cst-btn" href="#!">
+                     <a class="cst-btn" href="spark-65.php">
                         <span>
                            <span class="text-1">
                                  Buy Now
@@ -354,6 +359,48 @@
          </div>
        </div>
       <!-- Trusted  by -->
+      <!-- Key Features -->
+       <div class="key-features-area pt-80 pb-80">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="key-features-box bg-light rounded-4 p-5">
+                     <h3 class="mb-30 tp-ff-familjen fw-600 fs-30">Key Features</h3>
+                     <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Ultra HD display with up to 3840 x 2160 resolution of input signal available.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Built-in Wi-Fi realizes miracasting without any cable connection.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Various audio and video interfaces for device access.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Built-in network switch chip saves a network switch.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Built-in Android system provides kinds of applications.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Ultra-thin design with aluminum profile frame.</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                           <svg class="text-primary me-3 mt-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0d6efd; min-width: 24px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                           <span class="fs-18">Looping-out display available.</span>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+       </div>
       <!-- Product -->
        <div class="tp-feature-area pb-80 pt-80">
          <div class="container">

@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
   <head>
@@ -19,26 +24,22 @@
     <?php include 'inc/header.php'; ?>
 
     <main>
-      <div
-        class="pb-5 bg-light cart-wrapper"
-        style="
-          padding-top: 120px;
-          font-family:
-            -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
-            sans-serif;
-        "
-      >
+      <div class="pb-5 bg-light cart-wrapper pt-5 mt-5">
         <div class="container">
           <div class="mx-auto" style="max-width: 1100px">
+            
+            <!-- Page Heading -->
+            <div class="text-center mb-5 mt-3">
+               <h1 class="fs-1 fw-bold text-dark mb-2">Shopping Cart</h1>
+               <p class="text-secondary fs-6">Review your items and proceed to checkout.</p>
+            </div>
+
             <!-- Full Screen Empty Cart Message -->
             <div
               class="empty-cart-message bg-white rounded shadow-sm text-center py-5 px-3"
               style="display: none"
             >
-              <i
-                class="fas fa-shopping-cart text-muted mb-4 d-block"
-                style="font-size: 64px; color: #d1d5db !important"
-              ></i>
+              <i class="fas fa-shopping-cart text-muted mb-4 d-block display-1"></i>
               <h3 class="fs-4 text-dark mb-3">Your cart is empty</h3>
               <p class="text-secondary mb-4 fs-6">
                 Looks like you haven't added any items to your cart yet.
@@ -84,169 +85,8 @@
                       </div>
                     </div>
 
-                    <!-- Item 1 -->
-                    <div
-                      class="d-flex flex-wrap flex-lg-nowrap align-items-center border-bottom pb-4 mb-4 gap-3 cart-item"
-                      data-price="109824.00"
-                    >
-                      <div
-                        class="flex-grow-1 d-flex align-items-center gap-3 item-product-col"
-                        style="flex-basis: 100%"
-                      >
-                        <div
-                          class="bg-light rounded p-2 item-image-wrapper"
-                          style="width: 80px; height: 80px"
-                        >
-                          <img
-                            src="assets/img/pro1.jpg"
-                            alt="DeltaView Spark"
-                            class="w-100 h-100 object-fit-contain"
-                          />
-                        </div>
-                        <div class="d-flex flex-column item-info">
-                          <div
-                            class="fs-6 fw-bold text-dark text-uppercase mb-1 item-name"
-                            style="font-size: 12px !important"
-                          >
-                            DeltaView® Spark (75 inch)
-                          </div>
-                          <button
-                            class="btn btn-link text-danger p-0 mt-2 text-decoration-none d-flex align-items-center gap-1 text-remove-btn action-btn remove"
-                            style="font-size: 13px; font-weight: 500"
-                          >
-                            <i class="far fa-trash-alt"></i> Remove
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        class="text-center text-secondary d-none d-lg-block item-price-col"
-                        style="width: 100px; font-size: 12px"
-                      >
-                        ₹109,824.00
-                      </div>
-                      <div
-                        class="d-flex justify-content-start justify-content-lg-center item-qty-col"
-                        style="width: 120px"
-                      >
-                        <div
-                          class="d-flex align-items-center border rounded-pill bg-white qty-control"
-                          style="height: 32px; width: 90px"
-                        >
-                          <button
-                            class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn minus"
-                            style="width: 30px"
-                          >
-                            <i class="fas fa-minus"></i>
-                          </button>
-                          <input
-                            type="text"
-                            class="form-control form-control-sm border-0 text-center fw-bold bg-transparent shadow-none px-0 qty-input"
-                            value="1"
-                            readonly
-                            style="
-                              width: 30px;
-                              font-size: 12px;
-                              pointer-events: none;
-                            "
-                          />
-                          <button
-                            class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn plus"
-                            style="width: 30px"
-                          >
-                            <i class="fas fa-plus"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        class="text-start text-lg-end fw-bold text-dark item-total-col price-current"
-                        style="width: 100px; font-size: 12px"
-                      >
-                        ₹109,824.00
-                      </div>
-                    </div>
-
-                    <!-- Item 2 -->
-                    <div
-                      class="d-flex flex-wrap flex-lg-nowrap align-items-center pb-0 mb-0 gap-3 cart-item"
-                      data-price="166400.00"
-                    >
-                      <div
-                        class="flex-grow-1 d-flex align-items-center gap-3 item-product-col"
-                        style="flex-basis: 100%"
-                      >
-                        <div
-                          class="bg-light rounded p-2 item-image-wrapper"
-                          style="width: 80px; height: 80px"
-                        >
-                          <img
-                            src="assets/img/pro2.jpg"
-                            alt="DeltaView Blaze"
-                            class="w-100 h-100 object-fit-contain"
-                          />
-                        </div>
-                        <div class="d-flex flex-column item-info">
-                          <div
-                            class="fs-6 fw-bold text-dark text-uppercase mb-1 item-name"
-                            style="font-size: 12px !important"
-                          >
-                            DeltaView® Blaze (86 inch)
-                          </div>
-                          <button
-                            class="btn btn-link text-danger p-0 mt-2 text-decoration-none d-flex align-items-center gap-1 text-remove-btn action-btn remove"
-                            style="font-size: 13px; font-weight: 500"
-                          >
-                            <i class="far fa-trash-alt"></i> Remove
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        class="text-center text-secondary d-none d-lg-block item-price-col"
-                        style="width: 100px; font-size: 12px"
-                      >
-                        ₹166,400.00
-                      </div>
-                      <div
-                        class="d-flex justify-content-start justify-content-lg-center item-qty-col"
-                        style="width: 120px"
-                      >
-                        <div
-                          class="d-flex align-items-center border rounded-pill bg-white qty-control"
-                          style="height: 32px; width: 90px"
-                        >
-                          <button
-                            class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn minus"
-                            style="width: 30px"
-                          >
-                            <i class="fas fa-minus"></i>
-                          </button>
-                          <input
-                            type="text"
-                            class="form-control form-control-sm border-0 text-center fw-bold bg-transparent shadow-none px-0 qty-input"
-                            value="2"
-                            readonly
-                            style="
-                              width: 30px;
-                              font-size: 12px;
-                              pointer-events: none;
-                            "
-                          />
-                          <button
-                            class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn plus"
-                            style="width: 30px"
-                          >
-                            <i class="fas fa-plus"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        class="text-start text-lg-end fw-bold text-dark item-total-col price-current"
-                        style="width: 100px; font-size: 12px"
-                      >
-                        ₹332,800.00
-                      </div>
-                    </div>
+                    <!-- Dynamic Items Container -->
+                    <div id="dynamic-cart-items"></div>
                   </div>
                 </div>
 
@@ -280,18 +120,11 @@
                         class="d-flex justify-content-between mb-3 text-secondary fs-6 align-items-start summary-row shipping-row"
                       >
                         <span>Shipping</span>
-                        <div
-                          class="d-flex flex-column align-items-end text-end gap-1 shipping-details"
-                          style="flex: 1; max-width: 65%"
-                        >
+                        <div class="d-flex flex-column align-items-end text-end gap-1 shipping-details flex-grow-1 w-75">
                           <span class="text-dark fw-medium shipping-method"
                             >Free shipping</span
                           >
-                          <span
-                            class="text-muted shipping-destination"
-                            style="font-size: 12px"
-                            >Shipping to Haryana.</span
-                          >
+                          <span class="text-muted shipping-destination small">Shipping to Haryana.</span>
                         </div>
                       </div>
                       <div
@@ -304,10 +137,7 @@
                       </div>
                     </div>
 
-                    <div
-                      class="d-flex justify-content-between align-items-center fw-bold text-dark mb-4 summary-row total"
-                      style="font-size: 15px"
-                    >
+                    <div class="d-flex justify-content-between align-items-center fw-bold text-dark mb-4 summary-row total fs-5">
                       <span>Total</span>
                       <span id="cart-total" class="fs-5">₹326,444.32</span>
                     </div>
@@ -324,31 +154,12 @@
                     >
 
                     <div class="mt-4 promo-section">
-                      <div
-                        class="fw-medium text-secondary mb-2 promo-title"
-                        style="font-size: 13px"
-                      >
+                      <div class="fw-medium text-secondary mb-2 promo-title small">
                         Do you have a promo code?
                       </div>
                       <div class="position-relative d-block promo-input-group">
-                        <input
-                          type="text"
-                          class="form-control promo-input pe-5"
-                          placeholder="Enter promo code"
-                          style="
-                            height: 52px;
-                            border-radius: 8px;
-                            font-size: 14px;
-                          "
-                        />
-                        <button
-                          class="btn btn-dark position-absolute top-50 end-0 translate-middle-y me-2 px-3 promo-apply-btn"
-                          style="
-                            border-radius: 6px;
-                            font-size: 13px;
-                            height: 36px;
-                          "
-                        >
+                        <input type="text" class="form-control form-control-lg rounded-3 fs-6 promo-input" style="padding-right: 90px;" placeholder="Enter promo code" />
+                        <button class="btn btn-dark position-absolute top-50 end-0 translate-middle-y me-2 px-3 promo-apply-btn btn-sm rounded-2" type="button" style="z-index: 5;">
                           Apply
                         </button>
                       </div>
@@ -365,7 +176,7 @@
           </div>
 
           <!-- FAQ Section -->
-          <div class="mx-auto faq-section" style="max-width: 1100px; margin-top: 100px; margin-bottom: 100px;">
+          <div class="mx-auto faq-section container my-5 py-5">
             <h2 class="fs-5 fw-bold text-dark border-bottom pb-3 mb-4 text-center faq-title">
               Frequently Asked Questions
             </h2>
@@ -374,12 +185,12 @@
               <!-- Item 1 -->
               <div class="accordion-item border-bottom">
                 <h2 class="accordion-header" id="faqHeading1">
-                  <button class="accordion-button collapsed fw-medium text-dark p-3" style="font-size: 14px; box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                  <button class="accordion-button collapsed fw-medium text-dark p-3 fs-6 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
                     What are the sizes of products?
                   </button>
                 </h2>
                 <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body text-secondary p-3 pt-0" style="font-size: 14px; line-height: 1.6">
+                  <div class="accordion-body text-secondary p-3 pt-0 fs-6 lh-lg">
                     DeltaView intelligent interactive panels are available in a variety of sizes to suit different spaces and requirements. Our standard sizes typically range from 65", 75", 86", up to 98" to ensure the perfect fit for anything from small huddle rooms to large lecture halls and boardrooms.
                   </div>
                 </div>
@@ -388,12 +199,12 @@
               <!-- Item 2 -->
               <div class="accordion-item border-bottom">
                 <h2 class="accordion-header" id="faqHeading2">
-                  <button class="accordion-button collapsed fw-medium text-dark p-3" style="font-size: 14px; box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                  <button class="accordion-button collapsed fw-medium text-dark p-3 fs-6 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
                     Does this panel connect to a smartphone?
                   </button>
                 </h2>
                 <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body text-secondary p-3 pt-0" style="font-size: 14px; line-height: 1.6">
+                  <div class="accordion-body text-secondary p-3 pt-0 fs-6 lh-lg">
                     Yes, absolutely. DeltaView panels support seamless wireless casting. You can easily connect, mirror, and share content directly from your smartphone, tablet, or laptop (supporting iOS, Android, Windows, and Mac) without the need for additional cables.
                   </div>
                 </div>
@@ -402,12 +213,12 @@
               <!-- Item 3 -->
               <div class="accordion-item border-bottom">
                 <h2 class="accordion-header" id="faqHeading3">
-                  <button class="accordion-button collapsed fw-medium text-dark p-3" style="font-size: 14px; box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                  <button class="accordion-button collapsed fw-medium text-dark p-3 fs-6 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
                     How much power does it consume?
                   </button>
                 </h2>
                 <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body text-secondary p-3 pt-0" style="font-size: 14px; line-height: 1.6">
+                  <div class="accordion-body text-secondary p-3 pt-0 fs-6 lh-lg">
                     Our panels are designed with energy efficiency in mind. While power consumption varies slightly depending on the screen size, a standard 75" panel generally consumes around 250W to 350W during active use, and drops to less than 0.5W when in standby mode.
                   </div>
                 </div>
@@ -416,12 +227,12 @@
               <!-- Item 4 -->
               <div class="accordion-item border-bottom">
                 <h2 class="accordion-header" id="faqHeading4">
-                  <button class="accordion-button collapsed fw-medium text-dark p-3" style="font-size: 14px; box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                  <button class="accordion-button collapsed fw-medium text-dark p-3 fs-6 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
                     Can we connect to it remotely?
                   </button>
                 </h2>
                 <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body text-secondary p-3 pt-0" style="font-size: 14px; line-height: 1.6">
+                  <div class="accordion-body text-secondary p-3 pt-0 fs-6 lh-lg">
                     Yes, you can. DeltaView panels are built for modern hybrid collaboration. They support remote device management and are fully compatible with popular video conferencing applications, allowing your team or students to connect, interact, and collaborate from anywhere in the world.
                   </div>
                 </div>
@@ -430,12 +241,12 @@
               <!-- Item 5 -->
               <div class="accordion-item border-0">
                 <h2 class="accordion-header" id="faqHeading5">
-                  <button class="accordion-button collapsed fw-medium text-dark p-3" style="font-size: 14px; box-shadow: none;" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                  <button class="accordion-button collapsed fw-medium text-dark p-3 fs-6 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
                     If I have a problem with the smart board, what is the turnaround time for support?
                   </button>
                 </h2>
                 <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body text-secondary p-3 pt-0" style="font-size: 14px; line-height: 1.6">
+                  <div class="accordion-body text-secondary p-3 pt-0 fs-6 lh-lg">
                     We pride ourselves on our after-sales service. We offer 24/7 Customer Support and a 3-Year On-Site Warranty. Because we cover over 15,000+ serviceable pin codes across India, our technical experts ensure a rapid response, typically providing on-site support and resolving issues within 24 to 48 hours.
                   </div>
                 </div>
@@ -454,137 +265,114 @@
     <?php include 'inc/footer-links.php'; ?>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Basic JS for quantity buttons
-        const minusBtns = document.querySelectorAll(".qty-btn.minus");
-        const plusBtns = document.querySelectorAll(".qty-btn.plus");
-
-        minusBtns.forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const input = this.nextElementSibling;
-            let val = parseInt(input.value);
-            if (val > 1) {
-              input.value = val - 1;
-              updateTotals();
-            } else if (val === 1) {
-              this.closest(".cart-item").remove();
-              updateTotals();
-              updateItemCount();
-            }
-          });
-        });
-
-        plusBtns.forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const input = this.previousElementSibling;
-            let val = parseInt(input.value);
-            input.value = val + 1;
-            updateTotals();
-          });
-        });
-
-        // Handle removes
-        const removeBtns = document.querySelectorAll(".action-btn.remove");
-        removeBtns.forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            this.closest(".cart-item").remove();
-            updateTotals();
-            updateItemCount();
-          });
-        });
-
-        function formatCurrency(number) {
-          return (
-            "₹" +
-            number.toLocaleString("en-IN", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-          );
-        }
-
         let currentDiscount = 0;
 
-        function updateTotals() {
-          const items = document.querySelectorAll(".cart-item");
+        function loadCartFromStorage() {
+          const cartDataStr = localStorage.getItem("deltaCartData");
+          let cartData = { items: [] };
+          if(cartDataStr) {
+            try { cartData = JSON.parse(cartDataStr); } catch(e) {}
+          }
+          return cartData;
+        }
+
+        function saveCartToStorage(cartData) {
+          localStorage.setItem("deltaCartData", JSON.stringify(cartData));
+        }
+
+        function formatCurrency(number) {
+          return "₹" + number.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function renderCart() {
+          const cartData = loadCartFromStorage();
+          const container = document.getElementById("dynamic-cart-items");
+          if (!container) return;
+          
+          container.innerHTML = "";
           let subtotal = 0;
 
-          items.forEach((item) => {
-            const qty = parseInt(item.querySelector(".qty-input").value) || 0;
-            const unitPrice = parseFloat(item.getAttribute("data-price")) || 0;
-            const itemTotal = qty * unitPrice;
-
-            // Update the individual item's price display based on its quantity
-            const priceEl = item.querySelector(".price-current");
-            if (priceEl) priceEl.textContent = formatCurrency(itemTotal);
-
+          cartData.items.forEach((item, index) => {
+            const itemTotal = item.qty * item.price;
             subtotal += itemTotal;
+
+            const itemHtml = `
+              <div class="d-flex flex-wrap flex-lg-nowrap align-items-center border-bottom pb-4 mb-4 gap-3 cart-item" data-index="${index}" data-price="${item.price}">
+                <div class="flex-grow-1 d-flex align-items-center gap-3 item-product-col" style="flex-basis: 100%">
+                  <div class="bg-light rounded p-2 item-image-wrapper" style="width: 80px; height: 80px">
+                    <img src="${item.image}" alt="${item.name}" class="w-100 h-100 object-fit-contain" />
+                  </div>
+                  <div class="d-flex flex-column item-info">
+                    <div class="fw-bold text-dark text-uppercase mb-1 item-name small">${item.name}</div>
+                    <button class="btn btn-link text-danger p-0 mt-2 text-decoration-none d-flex align-items-center gap-1 text-remove-btn action-btn remove small fw-medium" data-index="${index}">
+                      <i class="far fa-trash-alt"></i> Remove
+                    </button>
+                  </div>
+                </div>
+                <div class="text-center text-secondary d-none d-lg-block item-price-col small" style="width: 100px;">
+                  ${formatCurrency(item.price)}
+                </div>
+                <div class="d-flex justify-content-start justify-content-lg-center item-qty-col" style="width: 120px">
+                  <div class="d-flex align-items-center border rounded-pill bg-white qty-control" style="height: 32px; width: 90px">
+                    <button class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn minus" data-index="${index}" style="width: 30px">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="text" class="form-control form-control-sm border-0 text-center fw-bold bg-transparent shadow-none px-0 qty-input" value="${item.qty}" readonly style="width: 30px; font-size: 12px; pointer-events: none;" />
+                    <button class="btn btn-sm text-dark px-2 border-0 bg-transparent h-100 d-flex align-items-center justify-content-center qty-btn plus" data-index="${index}" style="width: 30px">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="text-start text-lg-end fw-bold text-dark item-total-col price-current small" style="width: 100px;">
+                  ${formatCurrency(itemTotal)}
+                </div>
+              </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemHtml);
           });
 
-          // Update header cart badge
-          const headerCartBadge = document.querySelector(
-            ".tp-header-pb-cart-count",
-          );
-          if (headerCartBadge) {
-            headerCartBadge.textContent = items.length;
-          }
+          updateTotalsAndCount(cartData, subtotal);
+          attachEventListeners();
+        }
 
+        function updateTotalsAndCount(cartData, subtotal) {
+          // calculate totals
+          let discountAmount = subtotal * currentDiscount;
+          let discountedSubtotal = subtotal - discountAmount;
+          const tax = discountedSubtotal * 0.18;
+          const total = discountedSubtotal + tax;
+
+          // save totals
+          cartData.subtotal = subtotal;
+          cartData.discountRate = currentDiscount;
+          cartData.discountAmount = discountAmount;
+          cartData.tax = tax;
+          cartData.total = total;
+          saveCartToStorage(cartData);
+
+          // update DOM elements
           const subtotalEl = document.getElementById("cart-subtotal");
           const taxEl = document.getElementById("cart-tax");
           const totalEl = document.getElementById("cart-total");
           const discountAmountEl = document.getElementById("cart-discount");
 
-          let discountAmount = subtotal * currentDiscount;
-          let discountedSubtotal = subtotal - discountAmount;
-
-          const shipping = 0; // Free shipping
-          const tax = discountedSubtotal * 0.18;
-
           if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
-          if (discountAmountEl && currentDiscount > 0)
-            discountAmountEl.textContent = "-" + formatCurrency(discountAmount);
+          if (discountAmountEl && currentDiscount > 0) discountAmountEl.textContent = "-" + formatCurrency(discountAmount);
           if (taxEl) taxEl.textContent = formatCurrency(tax);
-          if (totalEl)
-            totalEl.textContent = formatCurrency(
-              discountedSubtotal + shipping + tax,
-            );
+          if (totalEl) totalEl.textContent = formatCurrency(total);
 
-          // Save to localStorage for checkout page
-          const cartData = {
-            items: [],
-            subtotal: subtotal,
-            discountRate: currentDiscount,
-            discountAmount: discountAmount,
-            tax: tax,
-            total: discountedSubtotal + shipping + tax,
-          };
+          // Header cart badge
+          const headerCartBadge = document.querySelector(".tp-header-pb-cart-count");
+          if (headerCartBadge) headerCartBadge.textContent = cartData.items.length;
 
-          items.forEach((item) => {
-            const name = item.querySelector(".item-name").textContent;
-            const qty = parseInt(item.querySelector(".qty-input").value) || 0;
-            const unitPrice = parseFloat(item.getAttribute("data-price")) || 0;
-            cartData.items.push({ name: name, qty: qty, price: unitPrice });
-          });
-
-          localStorage.setItem("deltaCartData", JSON.stringify(cartData));
-        }
-
-        // Initialize totals on load
-        updateTotals();
-
-        function updateItemCount() {
-          const items = document.querySelectorAll(".cart-item");
+          // Item count in cart page
           const countEl = document.querySelector(".cart-count-num");
+          if (countEl) countEl.textContent = cartData.items.length;
+
+          // Empty message toggle
           const emptyMessage = document.querySelector(".empty-cart-message");
           const cartLayout = document.querySelector(".cart-layout");
-
-          if (countEl) {
-            countEl.textContent = items.length;
-          }
-
-          if (items.length === 0) {
+          if (cartData.items.length === 0) {
             if (emptyMessage) emptyMessage.style.display = "block";
             if (cartLayout) cartLayout.style.display = "none";
           } else {
@@ -593,8 +381,51 @@
           }
         }
 
-        // Initialize item count on load
-        updateItemCount();
+        function attachEventListeners() {
+          const minusBtns = document.querySelectorAll(".qty-btn.minus");
+          const plusBtns = document.querySelectorAll(".qty-btn.plus");
+          const removeBtns = document.querySelectorAll(".action-btn.remove");
+
+          minusBtns.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+              e.preventDefault();
+              const index = this.getAttribute("data-index");
+              const cartData = loadCartFromStorage();
+              if (cartData.items[index].qty > 1) {
+                cartData.items[index].qty--;
+              } else {
+                cartData.items.splice(index, 1);
+              }
+              saveCartToStorage(cartData);
+              renderCart();
+            });
+          });
+
+          plusBtns.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+              e.preventDefault();
+              const index = this.getAttribute("data-index");
+              const cartData = loadCartFromStorage();
+              cartData.items[index].qty++;
+              saveCartToStorage(cartData);
+              renderCart();
+            });
+          });
+
+          removeBtns.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+              e.preventDefault();
+              const index = this.getAttribute("data-index");
+              const cartData = loadCartFromStorage();
+              cartData.items.splice(index, 1);
+              saveCartToStorage(cartData);
+              renderCart();
+            });
+          });
+        }
+
+        // Initialize cart on load
+        renderCart();
 
         // Geolocation logic for shipping
         function fetchLocationAndUpdate() {
@@ -655,7 +486,7 @@
                 promoMessage.style.color = "#16a34a";
                 promoMessage.style.display = "block";
               }
-              updateTotals();
+              renderCart();
             } else {
               currentDiscount = 0;
               if (discountRow) discountRow.style.display = "none";
@@ -664,7 +495,7 @@
                 promoMessage.style.color = "#dc2626";
                 promoMessage.style.display = "block";
               }
-              updateTotals();
+              renderCart();
             }
           });
         }

@@ -8,19 +8,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = getLoggedInUserId();
         $total = $cartData['total'] ?? 0;
         
-        // Save billing address
-        $stmt = $pdo->prepare("INSERT INTO addresses (user_id, type, address_line1, city, state, zip, country) VALUES (?, 'billing', ?, ?, ?, ?, 'India')");
-        $stmt->execute([
-            $userId, 
-            $_POST['billing_address'] ?? '', 
-            $_POST['billing_city'] ?? '', 
-            $_POST['billing_state'] ?? '', 
-            $_POST['billing_pincode'] ?? ''
-        ]);
+        // Check if shipping to different address
+        $useShipping = isset($_POST['ship_to_different']);
         
-        // Insert order
-        $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'Processing')");
-        $stmt->execute([$userId, $total]);
+        $addressLine = $useShipping ? ($_POST['shipping_address'] ?? '') : ($_POST['billing_address'] ?? '');
+        $addressLine2 = $useShipping ? ($_POST['shipping_address_line2'] ?? '') : ($_POST['billing_address_line2'] ?? '');
+        $city = $useShipping ? ($_POST['shipping_city'] ?? '') : ($_POST['billing_city'] ?? '');
+        $state = $useShipping ? ($_POST['shipping_state'] ?? '') : ($_POST['billing_state'] ?? '');
+        $pincode = $useShipping ? ($_POST['shipping_pincode'] ?? '') : ($_POST['billing_pincode'] ?? '');
+        $type = $useShipping ? 'shipping' : 'billing';
+        
+        $firstName = $useShipping ? ($_POST['shipping_first_name'] ?? '') : ($_POST['billing_first_name'] ?? '');
+        $lastName = $useShipping ? ($_POST['shipping_last_name'] ?? '') : ($_POST['billing_last_name'] ?? '');
+        $phone = $useShipping ? ($_POST['shipping_phone'] ?? '') : ($_POST['billing_phone'] ?? '');
+        $email = $useShipping ? ($_POST['shipping_email'] ?? '') : ($_POST['billing_email'] ?? '');
+        $company = $useShipping ? ($_POST['shipping_company'] ?? '') : ($_POST['billing_company'] ?? '');
+        $gst = $useShipping ? ($_POST['shipping_gst'] ?? '') : ($_POST['billing_gst'] ?? '');
+        
+        // Check if address exists
+        $checkStmt = $pdo->prepare("SELECT id FROM addresses WHERE user_id = ? AND LOWER(TRIM(address_line1)) = LOWER(TRIM(?)) AND LOWER(TRIM(city)) = LOWER(TRIM(?)) AND LOWER(TRIM(state)) = LOWER(TRIM(?)) AND zip = ?");
+        $checkStmt->execute([$userId, $addressLine, $city, $state, $pincode]);
+        
+        if ($existing = $checkStmt->fetch(PDO::FETCH_ASSOC)) {
+            $addressId = $existing['id'];
+        } else {
+            // Save the chosen address
+            $stmt = $pdo->prepare("INSERT INTO addresses (user_id, type, first_name, last_name, phone, email, company, gst, address_line1, address_line2, city, state, zip, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'India')");
+            $stmt->execute([$userId, $type, $firstName, $lastName, $phone, $email, $company, $gst, $addressLine, $addressLine2, $city, $state, $pincode]);
+            $addressId = $pdo->lastInsertId();
+        }
+        
+        // Insert order with address_id
+        $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status, address_id) VALUES (?, ?, 'Processing', ?)");
+        $stmt->execute([$userId, $total, $addressId]);
         $orderId = $pdo->lastInsertId();
         
         // Insert items
@@ -33,6 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+$user = getLoggedInUser();
+$stmtBilling = $pdo->prepare("SELECT * FROM addresses WHERE user_id = ? AND type = 'billing' ORDER BY created_at DESC LIMIT 1");
+$stmtBilling->execute([$user['id']]);
+$defBilling = $stmtBilling->fetch(PDO::FETCH_ASSOC);
+
+$stmtShipping = $pdo->prepare("SELECT * FROM addresses WHERE user_id = ? AND type = 'shipping' ORDER BY created_at DESC LIMIT 1");
+$stmtShipping->execute([$user['id']]);
+$defShipping = $stmtShipping->fetch(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -92,8 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="text"
+                      name="billing_first_name"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="First name"
+                      value="<?php echo htmlspecialchars($defBilling['first_name'] ?? ''); ?>"
                       required
                     />
                   </div>
@@ -105,8 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="text"
+                      name="billing_last_name"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="Last name"
+                      value="<?php echo htmlspecialchars($defBilling['last_name'] ?? ''); ?>"
                       required
                     />
                   </div>
@@ -121,8 +153,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="text"
+                      name="billing_phone"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="Phone No."
+                      value="<?php echo htmlspecialchars($defBilling['phone'] ?? ''); ?>"
                       required
                       pattern="[0-9]{10}"
                       title="Please enter a valid 10-digit phone number"
@@ -139,8 +173,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="email"
+                      name="billing_email"
                       class="form-control py-2 shadow-none border-secondary-subtle"
-                      value="grover.dipin007@gmail.com"
+                      value="<?php echo htmlspecialchars($defBilling['email'] ?? $user['email']); ?>"
                       placeholder="Email address"
                       required
                     />
@@ -156,8 +191,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="text"
+                      name="billing_company"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="Company name (optional)"
+                      value="<?php echo htmlspecialchars($defBilling['company'] ?? ''); ?>"
                     />
                   </div>
                   <div class="col-md-6">
@@ -168,8 +205,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                     <input
                       type="text"
+                      name="billing_gst"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="GST Number (optional)"
+                      value="<?php echo htmlspecialchars($defBilling['gst'] ?? ''); ?>"
                     />
                   </div>
                 </div>
@@ -185,7 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       type="text"
                       name="billing_address"
                       class="form-control py-2 shadow-none border-secondary-subtle"
-                      placeholder="e.g. 123 Main St, Apt 4B"
+                      placeholder="House number and street name"
+                      value="<?php echo htmlspecialchars($defBilling['address_line1'] ?? ''); ?>"
                       required
                     />
                   </div>
@@ -204,10 +244,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       name="billing_pincode"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="PIN Code"
+                      value="<?php echo htmlspecialchars($defBilling['zip'] ?? ''); ?>"
                       required
                       pattern="[0-9]{6}"
                       title="Please enter a valid 6-digit PIN code"
                       maxlength="6"
+                      minlength="6"
                       oninput="
                         this.value = this.value.replace(/[^0-9]/g, '');
                         if (this.value.length === 6)
@@ -227,6 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       name="billing_city"
                       class="form-control py-2 shadow-none border-secondary-subtle"
                       placeholder="Town / City"
+                      value="<?php echo htmlspecialchars($defBilling['city'] ?? ''); ?>"
                       required
                     />
                   </div>
@@ -276,7 +319,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <option value="Uttar Pradesh">Uttar Pradesh</option>
                       <option value="Uttarakhand">Uttarakhand</option>
                       <option value="West Bengal">West Bengal</option>
+                      <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                      <option value="Chandigarh">Chandigarh</option>
+                      <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                      <option value="Ladakh">Ladakh</option>
+                      <option value="Lakshadweep">Lakshadweep</option>
+                      <option value="Puducherry">Puducherry</option>
                     </select>
+
+
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function() {
+                        const savedState = "<?php echo htmlspecialchars($defBilling['state'] ?? ''); ?>";
+                        if (savedState) {
+                          const stateSelect = document.getElementById('billing_state');
+                          for (let i = 0; i < stateSelect.options.length; i++) {
+                            if (stateSelect.options[i].value === savedState) {
+                              stateSelect.selectedIndex = i;
+                              break;
+                            }
+                          }
+                        }
+                      });
+                    </script>
                   </div>
                 </div>
 
@@ -287,6 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <input
                     type="checkbox"
                     id="diff-addr"
+                    name="ship_to_different"
                     class="form-check-input mt-0 shadow-none"
                     style="cursor: pointer"
                   />
@@ -313,8 +381,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="text"
+                        name="shipping_first_name"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="First name"
+                        value="<?php echo htmlspecialchars($defShipping['first_name'] ?? ''); ?>"
                         required
                       />
                     </div>
@@ -326,8 +396,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="text"
+                        name="shipping_last_name"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="Last name"
+                        value="<?php echo htmlspecialchars($defShipping['last_name'] ?? ''); ?>"
                         required
                       />
                     </div>
@@ -342,8 +414,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="text"
+                        name="shipping_phone"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="Phone No."
+                        value="<?php echo htmlspecialchars($defShipping['phone'] ?? ''); ?>"
                         required
                         pattern="[0-9]{10}"
                         title="Please enter a valid 10-digit phone number"
@@ -360,8 +434,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="email"
+                        name="shipping_email"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="Email address"
+                        value="<?php echo htmlspecialchars($defShipping['email'] ?? $user['email']); ?>"
                         required
                       />
                     </div>
@@ -376,8 +452,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="text"
+                        name="shipping_company"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="Company name (optional)"
+                        value="<?php echo htmlspecialchars($defShipping['company'] ?? ''); ?>"
                       />
                     </div>
                     <div class="col-md-6">
@@ -388,8 +466,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <input
                         type="text"
+                        name="shipping_gst"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="GST Number (optional)"
+                        value="<?php echo htmlspecialchars($defShipping['gst'] ?? ''); ?>"
                       />
                     </div>
                   </div>
@@ -399,14 +479,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <label
                         class="form-label fw-medium text-secondary mb-2"
                         style="font-size: 14px"
-                        >Street address
+                        >Address
                         <span class="text-danger req">*</span></label
                       >
                       <input
                         type="text"
+                        name="shipping_address"
                         class="form-control py-2 shadow-none border-secondary-subtle"
-                        placeholder="e.g. 123 Main St, Apt 4B"
-                        required
+                        placeholder="House number and street name"
+                        value="<?php echo htmlspecialchars($defShipping['address_line1'] ?? ''); ?>"
                       />
                     </div>
                   </div>
@@ -421,12 +502,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <input
                         type="text"
                         id="shipping_pincode"
+                        name="shipping_pincode"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="PIN Code"
-                        required
+                        value="<?php echo htmlspecialchars($defShipping['zip'] ?? ''); ?>"
                         pattern="[0-9]{6}"
                         title="Please enter a valid 6-digit PIN code"
                         maxlength="6"
+                        minlength="6"
                         oninput="
                           this.value = this.value.replace(/[^0-9]/g, '');
                           if (this.value.length === 6)
@@ -444,9 +527,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <input
                         type="text"
                         id="shipping_city"
+                        name="shipping_city"
                         class="form-control py-2 shadow-none border-secondary-subtle"
                         placeholder="Town / City"
-                        required
+                        value="<?php echo htmlspecialchars($defShipping['city'] ?? ''); ?>"
                       />
                     </div>
                   </div>
@@ -460,8 +544,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >
                       <select
                         id="shipping_state"
+                        name="shipping_state"
                         class="form-control py-2 shadow-none border-secondary-subtle"
-                        required
                       >
                         <option value="">Select State</option>
                         <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -496,7 +580,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="Uttar Pradesh">Uttar Pradesh</option>
                         <option value="Uttarakhand">Uttarakhand</option>
                         <option value="West Bengal">West Bengal</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                        <option value="Ladakh">Ladakh</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
                       </select>
+                      <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                          const savedShippingState = "<?php echo htmlspecialchars($defShipping['state'] ?? ''); ?>";
+                          if (savedShippingState) {
+                            const stateSelect = document.getElementById('shipping_state');
+                            for (let i = 0; i < stateSelect.options.length; i++) {
+                              if (stateSelect.options[i].value === savedShippingState) {
+                                stateSelect.selectedIndex = i;
+                                break;
+                              }
+                            }
+                          }
+                          
+                          <?php if ($defShipping): ?>
+                          // Auto check the ship to different address box if a shipping address is found
+                          const diffAddrCheckbox = document.getElementById("diff-addr");
+                          if (diffAddrCheckbox) {
+                             diffAddrCheckbox.checked = true;
+                             // Trigger change event to show the form
+                             diffAddrCheckbox.dispatchEvent(new Event('change'));
+                          }
+                          <?php endif; ?>
+                        });
+                      </script>
                     </div>
                   </div>
                 </div>
@@ -669,6 +785,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     class="form-check-input mt-1 shadow-none"
                     style="cursor: pointer; width: 18px; height: 18px"
                   />
+
+
                   <span
                     >I have read and agree to the website
                     <a
@@ -784,8 +902,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               const postOffice = data[0].PostOffice[0];
               const cityInput = document.getElementById(`${type}_city`);
               const stateSelect = document.getElementById(`${type}_state`);
-              if (cityInput) cityInput.value = postOffice.District;
-              if (stateSelect) stateSelect.value = postOffice.State;
+              if (cityInput) {
+                  cityInput.value = postOffice.District;
+                  cityInput.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              
+              let stateName = postOffice.State;
+              if (stateName === 'Andaman & Nicobar Islands') stateName = 'Andaman and Nicobar Islands';
+              if (stateName === 'Dadra & Nagar Haveli' || stateName === 'Daman & Diu') stateName = 'Dadra and Nagar Haveli and Daman and Diu';
+              
+              if (stateSelect) {
+                  let found = false;
+                  for (let i = 0; i < stateSelect.options.length; i++) {
+                    if (stateSelect.options[i].value.toLowerCase() === stateName.toLowerCase()) {
+                      stateSelect.selectedIndex = i;
+                      stateSelect.dispatchEvent(new Event('input', { bubbles: true }));
+                      found = true;
+                      break;
+                    }
+                  }
+              }
             } else {
               console.warn("Invalid PIN Code or location data not found.");
             }

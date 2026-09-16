@@ -229,7 +229,7 @@
    <header>
 
       <!-- tp-header-area-start -->
-      <div id="header-sticky" class="tp-header-area pre-header tp-header-cst-wrap sticky-white-bg tp-header-blur header-transparent tp-header-lg-spacing">
+      <div id="header-sticky" class="tp-header-area pre-header tp-header-cst-wrap sticky-white-bg tp-header-blur header-transparent tp-header-lg-spacing" style="z-index: 9999;">
          <div class="tp-menu-band bg-light">
             <div class="container-fluid">
                <div class="tp-main-menu tp-main-menu-cst d-lg-flex d-none justify-content-end align-items-center">
@@ -391,10 +391,21 @@
                      });
                   </script>
                    <div class="tp-header-pb-cart p-relative d-inline-block">
+                     <?php
+                     require_once __DIR__ . '/auth.php';
+                     $headerUser = getLoggedInUser();
+                     if ($headerUser):
+                     ?>
+                     <a href="my-account.php" class="tp-header-pb-cart-icon" title="My Account">
+                        <i class="fa-regular fa-user-check fa-lg"></i>
+                        <span class="user-name text-truncate" style="max-width: 80px; display: inline-block; vertical-align: bottom;"><?php echo htmlspecialchars($headerUser['display_name'] ?: ($headerUser['first_name'] ?: explode(' ', trim($headerUser['name']))[0])); ?></span>
+                     </a>
+                     <?php else: ?>
                      <a href="sign-in.php" class="tp-header-pb-cart-icon">
                         <i class="fa-regular fa-user fa-lg"></i>
                         <span class="user-name">Sign In</span>
                      </a>
+                     <?php endif; ?>
                   </div>
                   <button class="tp-menu-bar tp-header-sidebar-btn ml-20 d-xl-none">
                      <span></span>

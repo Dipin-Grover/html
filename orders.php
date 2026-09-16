@@ -12,12 +12,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html class="no-js" lang="zxx">
   <head>
     <?php include 'inc/head.php'; ?>
-    <style>
-      /* 
-  Custom styles have been removed. 
-  This page now strictly uses Bootstrap 5 utilities for a clean structure. 
-*/
-    </style>
+    
   </head>
 
   <body>
