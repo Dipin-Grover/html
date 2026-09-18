@@ -15,7 +15,6 @@ const headlinesData = [
   { id: 11, image: '11.jpg', title: '17th NCN Event 2025', location: 'New Delhi', link: '/comingSoon' },
   { id: 12, image: '12.jpg', title: '17th NCN Event 2025', location: 'New Delhi', link: '/comingSoon' },
 ];
-
 const HeadlinesArea = () => {
   return (
     <div className="tp-team-area pt-50 pb-50">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Spark65 from './pages/Spark65';
@@ -34,7 +35,9 @@ import LoginSecurity from './pages/LoginSecurity';
 import DeliveryStatus from './pages/DeliveryStatus';
 import Support from './pages/Support';
 import Glossary from './pages/Glossary';
+import GlossaryTerm from './pages/GlossaryTerm';
 import TutorialVideos from './pages/TutorialVideos';
+import FindAPartner from "./pages/FindAPartner";
 
 function App() {
   return (
@@ -71,8 +74,10 @@ function App() {
           <Route path="*" element={<ComingSoon />} />
           <Route path="coming-soon" element={<ComingSoon />} />
           <Route path="glossary" element={<Glossary />} />
+          <Route path="glossary/:term" element={<GlossaryTerm />} />
           <Route path="tutorial-videos" element={<TutorialVideos />} />
           <Route path="tutorial-videos.php" element={<TutorialVideos />} />
+          <Route path="findApartner" element={<FindAPartner />} />
           {/* Add more routes here as you migrate other pages */}
         </Route>
         <Route path="/sign-in" element={<SignIn />} />

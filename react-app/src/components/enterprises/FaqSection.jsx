@@ -1,6 +1,55 @@
 import React from "react";
 
-const testimonials = Array.from({ length: 12 });
+const testimonialData = [
+  {
+    name: "Kate Leeman",
+    role: "Head of Product",
+    image: "/assets/img/testi1.webp",
+    text: "I love how Aleric helps me track my<br />expenses and alerts me about upcoming<br />bills. It's a must have app!"
+  },
+  {
+    name: "John Doe",
+    role: "Marketing Manager",
+    image: "/assets/img/testi1.webp",
+    text: "This product has completely transformed<br />the way our team collaborates.<br />Highly recommended!"
+  },
+  {
+    name: "Sarah Jenkins",
+    role: "CEO, TechFlow",
+    image: "/assets/img/testi1.webp",
+    text: "An incredibly intuitive interface with<br />all the features we need to<br />scale our business efficiently."
+  },
+  {
+    name: "Michael Chang",
+    role: "Lead Developer",
+    image: "/assets/img/testi1.webp",
+    text: "The performance and reliability are<br />unmatched. It saves us countless<br />hours every single week."
+  },
+  {
+    name: "Emma Wilson",
+    role: "Freelance Consultant",
+    image: "/assets/img/testi1.webp",
+    text: "Customer support is top-notch, and<br />the platform itself is incredibly<br />easy to navigate and use."
+  },
+  {
+    name: "David Smith",
+    role: "Operations Director",
+    image: "/assets/img/testi1.webp",
+    text: "We've seen a 40% increase in<br />productivity since implementing this<br />solution across our departments."
+  },
+  {
+    name: "Laura Martinez",
+    role: "Sales Executive",
+    image: "/assets/img/testi1.webp",
+    text: "A game-changer for our sales team.<br />The analytics and reporting tools<br />are simply outstanding."
+  },
+  {
+    name: "James Wilson",
+    role: "HR Manager",
+    image: "/assets/img/testi1.webp",
+    text: "Onboarding new employees has never<br />been easier. The user experience<br />is flawless from start to finish."
+  }
+];
 
 const StarIcon = () => (
   <svg
@@ -17,32 +66,26 @@ const StarIcon = () => (
   </svg>
 );
 
-const TestimonialCard = () => (
+const TestimonialCard = ({ name, role, image, text }) => (
   <div className="app-testimonial-item">
     <div className="app-testimonial-item-icon-box d-flex align-items-center mb-20">
       <div className="app-testimonial-item-icon">
         <span>
-          <img src="/assets/img/testi1.webp" alt="" />
+          <img src={image} alt={name} />
         </span>
       </div>
 
       <div className="app-testimonial-item-icon-content">
         <h4 className="app-testimonial-item-icon-title">
-          Kate Leeman
+          {name}
         </h4>
 
-        <p>Head of Product, Designer</p>
+        <p>{role}</p>
       </div>
     </div>
 
     <div className="app-testimonial-item-content">
-      <p>
-        "I love how Aleric helps me track my
-        <br />
-        expenses and alerts me about upcoming
-        <br />
-        bills. It's a must have app!"
-      </p>
+      <p dangerouslySetInnerHTML={{ __html: text }} />
 
       <div className="app-testimonial-item-star">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -58,13 +101,13 @@ const TestimonialCard = () => (
 const TestimonialRow = ({ reverse = false }) => (
   <div className="ais-testimonial-wrap z-index-1 p-relative">
     <div
-      className={`app-testimonial-wrapper ${
-        reverse ? "ais-rtl" : ""
-      }`}
+      className={`app-testimonial-wrapper ${reverse ? "ais-rtl" : ""
+        }`}
     >
       <div className="app-testimonial-slider d-flex">
-        {testimonials.map((_, index) => (
-          <TestimonialCard key={index} />
+        {/* Render twice for continuous scroll effect if needed, or just map the data */}
+        {[...testimonialData, ...testimonialData].map((item, index) => (
+          <TestimonialCard key={index} {...item} />
         ))}
       </div>
     </div>
@@ -117,7 +160,7 @@ const AboutTestimonials = () => {
                 </span>
 
                 <h4 className="ais-section-title">
-                  Built on Trust. Backed by Experience. 
+                  Built on Trust. Backed by Experience.
                 </h4>
 
                 <div className="app-testimonial-big-text">

@@ -28,7 +28,7 @@ const AboutArea = () => {
                         
                      </span>
                      <div className="tp-about-pp-skill-content">
-                        <span className="tp-text-common-black fw-600 fs-18 lh-14">Pan India Delivery</span>
+                        <span className="tp-text-common-black fw-600 fs-18 lh-14">All India Delivery</span>
                      </div>
                   </div>
                </div>
