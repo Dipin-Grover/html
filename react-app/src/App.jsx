@@ -38,6 +38,8 @@ import Glossary from './pages/Glossary';
 import GlossaryTerm from './pages/GlossaryTerm';
 import TutorialVideos from './pages/TutorialVideos';
 import FindAPartner from "./pages/FindAPartner";
+import DeltaViewLearn from "./pages/DeltaViewLearn";
+import DeltaViewConnect from "./pages/DeltaViewConnect";
 
 function App() {
   return (
@@ -56,7 +58,7 @@ function App() {
           <Route path="download-center" element={<DownloadCenter />} />
           <Route path="service-request" element={<ServiceRequest />} />
           <Route path="book-demo" element={<BookDemo />} />
-          <Route path="headlines" element={<Headlines />} />
+          <Route path="headlines" element={<Headlines />} />aa
           <Route path="checkout" element={<Checkout />} />
           <Route path="my-account" element={<MyAccount />} />
           <Route path="my-account/address" element={<YourAddress />} />
@@ -78,6 +80,8 @@ function App() {
           <Route path="tutorial-videos" element={<TutorialVideos />} />
           <Route path="tutorial-videos.php" element={<TutorialVideos />} />
           <Route path="findApartner" element={<FindAPartner />} />
+          <Route path="deltaview-learn" element={<DeltaViewLearn />} />
+          <Route path="deltaview-connect" element={<DeltaViewConnect />} />
           {/* Add more routes here as you migrate other pages */}
         </Route>
         <Route path="/sign-in" element={<SignIn />} />

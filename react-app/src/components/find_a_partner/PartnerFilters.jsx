@@ -13,79 +13,91 @@ const PartnerFilters = ({
     onSearchArea,
 }) => {
     return (
-        <div className="bg-white border-0 shadow-sm rounded-4 p-4">
+        <div className="bg-white rounded-4 partner-filter-box">
 
-            {/* State */}
-            <div className="mb-3">
-                <label className="form-label fw-semibold text-dark">
-                    Select State
-                </label>
+            <div className="row gx-4">
 
-                <select
-                    className="form-select bg-light border-0 py-2 shadow-none"
-                    value={selectedState}
-                    onChange={(e) => onStateChange(e.target.value)}
-                >
-                    <option value="">Select State</option>
+                {/* STATE */}
+                <div className="col-lg-4">
+                    <label className="form-label mb-2">
+                        Select State
+                    </label>
 
-                    {states.map((state) => (
-                        <option key={state} value={state}>
-                            {state}
+                    <select
+                        className="form-select"
+                        value={selectedState}
+                        onChange={(e) =>
+                            onStateChange(e.target.value)
+                        }
+                    >
+                        <option value="">
+                            Select State
                         </option>
-                    ))}
-                </select>
-            </div>
 
-            {/* District */}
-            <div className="mb-3">
-                <label className="form-label fw-semibold text-dark">
-                    Select District
-                </label>
-
-                <select
-                    className="form-select bg-light border-0 py-2 shadow-none"
-                    value={selectedDistrict}
-                    onChange={(e) => onDistrictChange(e.target.value)}
-                    disabled={!selectedState}
-                >
-                    <option value="">Select District</option>
-
-                    {districts.map((district) => (
-                        <option key={district} value={district}>
-                            {district}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* Search */}
-            <div>
-                <label className="form-label fw-semibold text-dark">
-                    Search Store
-                </label>
-                <div className="position-relative">
-                    <FiSearch
-                        className="position-absolute text-muted"
-                        style={{
-                            left: "15px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                        }}
-                    />
-
-                    <input
-                        type="text"
-                        className="form-control bg-light border-0 shadow-none py-2 ps-5"
-                        placeholder="Search By Location"
-                        value={search}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                    />
+                        {states.map((state) => (
+                            <option key={state} value={state}>
+                                {state}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                {/* Search Area Button */}
+                {/* DISTRICT */}
+                <div className="col-lg-4">
+                    <label className="form-label mb-2">
+                        Select District
+                    </label>
+
+                    <select
+                        className="form-select"
+                        value={selectedDistrict}
+                        onChange={(e) =>
+                            onDistrictChange(e.target.value)
+                        }
+                        disabled={!selectedState}
+                    >
+                        <option value="">
+                            Select District
+                        </option>
+
+                        {districts.map((district) => (
+                            <option key={district} value={district}>
+                                {district}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* SEARCH */}
+                <div className="col-lg-4">
+                    <label className="form-label mb-2">
+                        Search Store
+                    </label>
+
+                    <div className="position-relative">
+
+                        <FiSearch className="partner-search-icon" />
+
+                        <input
+                            type="text"
+                            className="form-control ps-5"
+                            placeholder="Search By Location"
+                            value={search}
+                            onChange={(e) =>
+                                onSearchChange(e.target.value)
+                            }
+                        />
+
+                    </div>
+                </div>
+
+            </div>
+
+            {/* SEARCH BUTTON */}
+            <div className="text-center mt-4">
                 <button
                     type="button"
-                    className="btn btn-primary w-100 mt-4 py-2 fw-medium shadow-sm transition-all"
+                    className="btn btn-primary partner-search-btn"
                     onClick={onSearchArea}
                 >
                     <FiSearch className="me-2" />

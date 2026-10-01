@@ -1,6 +1,82 @@
 import React from "react";
 
-const testimonials = Array.from({ length: 12 });
+const testimonialDataRow1 = [
+  {
+    name: "Anand Sharma",
+    role: "IT Director",
+    image: "/assets/img/testi_anand.jpg",
+    quote: "DeltaView has completely transformed how our teams collaborate globally. The interactive displays are incredibly intuitive."
+  },
+  {
+    name: "Manoj Kumar",
+    role: "School Principal",
+    image: "/assets/img/testi_manoj.jpg",
+    quote: "The smart boards from DeltaView made learning so much more engaging for our students. Absolutely worth the investment."
+  },
+  {
+    name: "Shiva Reddy",
+    role: "Lead Architect",
+    image: "/assets/img/testi_shiva.jpg",
+    quote: "Presenting complex designs to clients is a breeze now. The 4K resolution and touch responsiveness are unparalleled."
+  },
+  {
+    name: "Priya Singh",
+    role: "Operations Manager",
+    image: "/assets/img/testi1.webp",
+    quote: "Seamless integration with our existing software ecosystem. DeltaView Connect just works out of the box."
+  },
+  {
+    name: "Karan Patel",
+    role: "Corporate Trainer",
+    image: "/assets/img/testi_anand.jpg",
+    quote: "The best interactive displays I've used in my career. The hardware is solid and software is highly intuitive."
+  },
+  {
+    name: "Sneha Verma",
+    role: "Marketing Head",
+    image: "/assets/img/testi_shiva.jpg",
+    quote: "Brainstorming sessions are more productive. Everyone can contribute simultaneously from their own devices."
+  }
+];
+
+const testimonialDataRow2 = [
+  {
+    name: "Vikram Malhotra",
+    role: "CTO, TechCorp",
+    image: "/assets/img/testi_manoj.jpg",
+    quote: "We deployed DeltaView across all our meeting rooms and the feedback from the staff has been phenomenal."
+  },
+  {
+    name: "Riya Kapoor",
+    role: "Design Lead",
+    image: "/assets/img/testi1.webp",
+    quote: "The color accuracy and touch precision on these boards make them an essential tool for our design team."
+  },
+  {
+    name: "Amit Joshi",
+    role: "Project Manager",
+    image: "/assets/img/testi_anand.jpg",
+    quote: "Keeping track of agile sprints and daily standups is so much easier with DeltaView's large interactive canvas."
+  },
+  {
+    name: "Divya Nair",
+    role: "Educator",
+    image: "/assets/img/testi_shiva.jpg",
+    quote: "My students love coming to the board now. The gamified learning apps work flawlessly on this display."
+  },
+  {
+    name: "Sanjay Mehta",
+    role: "CEO, InnovateX",
+    image: "/assets/img/testi_manoj.jpg",
+    quote: "A premium product that delivers on its promises. It has elevated the professional look of our boardroom."
+  },
+  {
+    name: "Pooja Reddy",
+    role: "HR Director",
+    image: "/assets/img/testi1.webp",
+    quote: "Hybrid meetings feel much more inclusive. The built-in camera and mic array capture everything perfectly."
+  }
+];
 
 const StarIcon = () => (
   <svg
@@ -17,34 +93,28 @@ const StarIcon = () => (
   </svg>
 );
 
-const TestimonialCard = () => (
+const TestimonialCard = ({ data }) => (
   <div className="app-testimonial-item">
     <div className="app-testimonial-item-icon-box d-flex align-items-center mb-20">
       <div className="app-testimonial-item-icon">
         <span>
-          <img src="/assets/img/testi1.webp" alt="" />
+          <img src={data.image} alt={data.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
         </span>
       </div>
 
       <div className="app-testimonial-item-icon-content">
         <h4 className="app-testimonial-item-icon-title">
-          Kate Leeman
+          {data.name}
         </h4>
 
-        <p>Head of Product, Designer</p>
+        <p>{data.role}</p>
       </div>
     </div>
 
     <div className="app-testimonial-item-content">
-      <p>
-        "I love how Aleric helps me track my
-        <br />
-        expenses and alerts me about upcoming
-        <br />
-        bills. It's a must have app!"
-      </p>
+      <p>"{data.quote}"</p>
 
-      <div className="app-testimonial-item-star">
+      <div className="app-testimonial-item-star mt-3">
         {[1, 2, 3, 4, 5].map((star) => (
           <span key={star}>
             <StarIcon />
@@ -55,21 +125,26 @@ const TestimonialCard = () => (
   </div>
 );
 
-const TestimonialRow = ({ reverse = false }) => (
-  <div className="ais-testimonial-wrap z-index-1 p-relative">
-    <div
-      className={`app-testimonial-wrapper ${
-        reverse ? "ais-rtl" : ""
-      }`}
-    >
-      <div className="app-testimonial-slider d-flex">
-        {testimonials.map((_, index) => (
-          <TestimonialCard key={index} />
-        ))}
+const TestimonialRow = ({ reverse = false, data = [] }) => {
+  // Duplicate array to ensure smooth infinite scrolling
+  const sliderData = [...data, ...data];
+  
+  return (
+    <div className="ais-testimonial-wrap z-index-1 p-relative">
+      <div
+        className={`app-testimonial-wrapper ${
+          reverse ? "ais-rtl" : ""
+        }`}
+      >
+        <div className="app-testimonial-slider d-flex">
+          {sliderData.map((item, index) => (
+            <TestimonialCard key={index} data={item} />
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const GoogleIcon = () => (
   <svg
@@ -161,10 +236,10 @@ const AboutTestimonials = () => {
       </div>
 
       {/* First row - Right to Left */}
-      <TestimonialRow />
+      <TestimonialRow data={testimonialDataRow1} />
 
       {/* Second row - Left to Right */}
-      <TestimonialRow reverse />
+      <TestimonialRow reverse data={testimonialDataRow2} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import FindPartnerHero from "../components/find_a_partner/FindPartnerHero";
 import PartnerFilters from "../components/find_a_partner/PartnerFilters";
 import PartnerList from "../components/find_a_partner/PartnerList";
 import PartnerMap from "../components/find_a_partner/PartnerMap";
+import FindPartnerFAQ from "../components/find_a_partner/FindPartnerFAQ";
 
 import { partners } from "../data/partners";
 
@@ -13,13 +14,18 @@ const FindAPartner = () => {
     const [search, setSearch] = useState("");
     const [selectedPartner, setSelectedPartner] = useState(null);
 
-    // Search in this Area trigger
     const [searchAreaTrigger, setSearchAreaTrigger] = useState(0);
 
+    // STATES
     const states = useMemo(() => {
-        return [...new Set(partners.map((partner) => partner.state))];
+        return [
+            ...new Set(
+                partners.map((partner) => partner.state)
+            ),
+        ];
     }, []);
 
+    // DISTRICTS
     const districts = useMemo(() => {
         if (!selectedState) {
             return [];
@@ -29,13 +35,15 @@ const FindAPartner = () => {
             ...new Set(
                 partners
                     .filter(
-                        (partner) => partner.state === selectedState
+                        (partner) =>
+                            partner.state === selectedState
                     )
                     .map((partner) => partner.district)
             ),
         ];
     }, [selectedState]);
 
+    // FILTER PARTNERS
     const filteredPartners = useMemo(() => {
         return partners.filter((partner) => {
             const stateMatch =
@@ -50,8 +58,12 @@ const FindAPartner = () => {
 
             const searchMatch =
                 !search ||
-                partner.name.toLowerCase().includes(searchText) ||
-                partner.address.toLowerCase().includes(searchText);
+                partner.name
+                    .toLowerCase()
+                    .includes(searchText) ||
+                partner.address
+                    .toLowerCase()
+                    .includes(searchText);
 
             return (
                 stateMatch &&
@@ -65,82 +77,86 @@ const FindAPartner = () => {
         search,
     ]);
 
+    // STATE CHANGE
     const handleStateChange = (state) => {
         setSelectedState(state);
-
         setSelectedDistrict("");
-
         setSearch("");
-
         setSelectedPartner(null);
     };
 
+    // DISTRICT CHANGE
     const handleDistrictChange = (district) => {
         setSelectedDistrict(district);
-
         setSelectedPartner(null);
     };
 
+    // PARTNER CLICK
     const handlePartnerClick = (partner) => {
         setSelectedPartner(partner);
     };
 
-    // Search in this Area button click
+    // SEARCH IN THIS AREA
     const handleSearchArea = () => {
-        setSearchAreaTrigger((prev) => prev + 1);
+        setSearchAreaTrigger(
+            (prev) => prev + 1
+        );
     };
 
     return (
         <>
+            {/* HERO */}
             <FindPartnerHero />
 
-            <section className="pb-100">
+            {/* FILTERS */}
+            <section className="position-relative find-partner-filter-overlap">
                 <div className="container">
 
-                    <div className="row g-4">
-
-                        {/* LEFT */}
-                        <div className="col-lg-4">
-
-                            <PartnerFilters
-                                states={states}
-                                districts={districts}
-                                selectedState={selectedState}
-                                selectedDistrict={selectedDistrict}
-                                search={search}
-                                onStateChange={handleStateChange}
-                                onDistrictChange={handleDistrictChange}
-                                onSearchChange={setSearch}
-                                onSearchArea={handleSearchArea}
-                            />
-
-                            <PartnerList
-                                partners={filteredPartners}
-                                selectedState={selectedState}
-                                selectedDistrict={selectedDistrict}
-                                onPartnerClick={handlePartnerClick}
-                            />
-
-                        </div>
-
-                        {/* RIGHT */}
-                        <div className="col-lg-8">
-
-                            <PartnerMap
-                                partners={filteredPartners}
-                                selectedState={selectedState}
-                                selectedDistrict={selectedDistrict}
-                                selectedPartner={selectedPartner}
-                                search={search}
-                                searchAreaTrigger={searchAreaTrigger}
-                                onPartnerClick={handlePartnerClick}
-                            />
-
-                        </div>
-
-                    </div>
+                    <PartnerFilters
+                        states={states}
+                        districts={districts}
+                        selectedState={selectedState}
+                        selectedDistrict={selectedDistrict}
+                        search={search}
+                        onStateChange={handleStateChange}
+                        onDistrictChange={handleDistrictChange}
+                        onSearchChange={setSearch}
+                        onSearchArea={handleSearchArea}
+                    />
 
                 </div>
+            </section>
+
+            {/* PARTNERS */}
+            <section className="pt-50 pb-50">
+                <div className="container">
+
+                    <PartnerList
+                        partners={filteredPartners}
+                        selectedState={selectedState}
+                        selectedDistrict={selectedDistrict}
+                        onPartnerClick={handlePartnerClick}
+                    />
+
+                </div>
+            </section>
+
+            {/* MAP */}
+            <section>
+                <PartnerMap
+                    partners={filteredPartners}
+                    selectedState={selectedState}
+                    selectedDistrict={selectedDistrict}
+                    selectedPartner={selectedPartner}
+                    search={search}
+                    searchAreaTrigger={searchAreaTrigger}
+                    onPartnerClick={handlePartnerClick}
+                />
+            </section>
+
+            {/* FAQ */}
+            <section>
+                <FindPartnerFAQ />
             </section>
         </>
     );

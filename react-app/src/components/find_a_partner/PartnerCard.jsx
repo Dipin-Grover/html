@@ -8,10 +8,9 @@ import {
 const PartnerCard = ({ partner, onClick }) => {
     return (
         <div
-            className="border-0 shadow-sm rounded-4 p-3 mb-3 bg-white transition-all"
+            className="border-0 shadow-sm rounded-4 p-3 mb-3 bg-white transition-all find-partner-card"
             role="button"
             onClick={onClick}
-            style={{ cursor: "pointer", transition: "all 0.3s ease" }}
             onMouseOver={(e) => {
                 e.currentTarget.style.transform = "translateY(-3px)";
                 e.currentTarget.classList.replace("shadow-sm", "shadow");

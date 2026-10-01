@@ -1,32 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { FiChevronLeft } from "react-icons/fi";
 
 const FindPartnerHero = () => {
     return (
-        <section className="pt-80 pb-40">
-            <div className="container">
+        <section className="position-relative find-partner-hero">
+
+            <div className="container position-relative">
                 <div className="row justify-content-center">
-                    <div className="col-lg-8 text-center">
-                        <h1 className="mb-15">
+
+                    <div className="col-lg-12 text-center find-partner-hero-content">
+
+                        <h1 className="find-partner-hero-title mb-30">
                             DeltaView Authorized Partners
                         </h1>
 
-                        <p className="mb-10">
-                            DeltaView Stores, DeltaView Authorized Service Providers and
-                            Online Support
+                        <p className="find-partner-hero-subtitle mb-30">
+                            DeltaView Stores, DeltaView Authorized Service
+                            Providers and Online Support
                         </p>
 
-                        <Link
-                            to="/"
-                            className="text-primary d-inline-flex align-items-center gap-1"
-                        >
-                            <FiChevronLeft />
-                            Back to Home
-                        </Link>
                     </div>
+
                 </div>
             </div>
+
         </section>
     );
 };

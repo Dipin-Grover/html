@@ -307,7 +307,7 @@ const Header = () => {
                                     <li><Link to="/about-us">About Us</Link></li>
                                     <li><Link to="/blogs">Blogs</Link></li>
                                     <li><Link to="/headlines">Headlines</Link></li>
-                                    <li><Link to="#!">Glossary</Link></li>
+                                    <li><Link to="/glossary">Glossary</Link></li>
                                  </ul>
                               </li>
                               <li className="has-dropdown">
@@ -332,8 +332,8 @@ const Header = () => {
                                     </span>
                                  </Link>
                                  <ul className="tp-submenu submenu">
-                                    <li><Link to="./comingSoon">Partner Success</Link></li>
-                                    <li><Link to="./comingSoon">Find a partner</Link></li>
+                                    <li><Link to="/comingSoon">Partner Success</Link></li>
+                                    <li><Link to="/findApartner">Find a partner</Link></li>
                                  </ul>
                               </li>
                               <li className="has-dropdown">
@@ -346,8 +346,8 @@ const Header = () => {
                                  </Link>
                                  <ul className="tp-submenu submenu">
                                     <li><Link to="/deltaview-canvas">DeltaView<span>®</span> Canvas</Link></li>
-                                    <li><Link to="/comingSoon">DeltaView<span>®</span> Connect</Link></li>
-                                    <li><Link to="/comingSoon">DeltaView<span>®</span> Learn</Link></li>
+                                    <li><Link to="/deltaview-connect">DeltaView<span>®</span> Connect</Link></li>
+                                    <li><Link to="/deltaview-learn">DeltaView<span>®</span> Learn</Link></li>
                                  </ul>
                               </li>
                               <li>

@@ -1,48 +1,82 @@
 import React from "react";
-import PartnerCard from "./PartnerCard";
+import { FiMapPin, FiPhone, FiArrowRight } from "react-icons/fi";
 
 const PartnerList = ({
-  partners,
-  selectedState,
-  selectedDistrict,
-  onPartnerClick,
+    partners,
+    selectedState,
+    selectedDistrict,
+    onPartnerClick,
 }) => {
-  return (
-    <div className="mt-4">
+    return (
+        <div className="partner-list">
 
-      {/* Header */}
-      <div className="d-flex justify-content-between align-items-end mb-3 pb-2 border-bottom">
+            {/* Header */}
+            <div className="d-flex align-items-center justify-content-between mb-20">
+                <h3 className="mb-0 find-partner-list-title">
+                    {partners.length} Partners Found
+                </h3>
+            </div>
 
-        <p className="mb-0 fw-bold text-dark fs-5">
-          {partners.length > 0
-            ? `${partners.length} Partners Found`
-            : "No Partners Found"}
-        </p>
+            {/* 3 CARDS PER ROW */}
+            <div className="row g-4">
 
-        {selectedDistrict && (
-          <span className="small text-muted fw-medium bg-light px-2 py-1 rounded-2">
-            {selectedDistrict}, {selectedState}
-          </span>
-        )}
+                {partners.slice(0, 4).map((partner) => (
+                    <div
+                        key={partner.id}
+                        className="col-lg-4 col-md-6 col-12"
+                    >
+                        <div
+                            className="bg-white rounded-4 h-100 find-partner-list-card"
+                            onClick={() => onPartnerClick(partner)}
+                        >
 
-      </div>
+                            {/* Arrow */}
+                            <div className="position-absolute d-flex align-items-center justify-content-center find-partner-list-arrow">
+                                <FiArrowRight size={17} />
+                            </div>
 
-      {/* Partners */}
-      <div 
-        className="pe-2" 
-        style={{ maxHeight: "480px", overflowY: "auto", overflowX: "hidden" }}
-      >
-        {partners.map((partner) => (
-          <PartnerCard
-            key={partner.id}
-            partner={partner}
-            onClick={() => onPartnerClick(partner)}
-          />
-        ))}
-      </div>
+                            {/* Partner Name */}
+                            <h5 className="mb-15 find-partner-list-name">
+                                {partner.name}
+                            </h5>
 
-    </div>
-  );
+                            {/* Address */}
+                            <div className="d-flex align-items-start mb-10 find-partner-list-info">
+                                <FiMapPin className="me-2 flex-shrink-0 find-partner-list-icon find-partner-list-location-icon" />
+
+                                <span>
+                                    {partner.address}
+                                </span>
+                            </div>
+
+                            {/* Phone */}
+                            <div className="d-flex align-items-center find-partner-list-info">
+                                <FiPhone className="me-2 flex-shrink-0 find-partner-list-icon" />
+
+                                <span>
+                                    {partner.phone}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                ))}
+
+            </div>
+
+            {/* No partners */}
+            {partners.length === 0 && (
+                <div className="text-center py-50">
+                    <h5>No Partners Found</h5>
+
+                    <p className="text-muted mb-0">
+                        Try changing your search or filters.
+                    </p>
+                </div>
+            )}
+
+        </div>
+    );
 };
 
 export default PartnerList;
