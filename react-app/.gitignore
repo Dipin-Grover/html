@@ -28,3 +28,14 @@ node_modules/
 dist/
 *.7z
 .env
+
+
+
+# Archives
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.bz2
+*.xz
